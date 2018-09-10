@@ -1,48 +1,19 @@
 package witek.marcin.projects;
 
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
-import net.sourceforge.tess4j.util.LoadLibs;
+import witek.marcin.projects.recipe.Recipe;
+import witek.marcin.projects.recipe.ocr.PolishRecipeTextRecognition;
+import witek.marcin.projects.recipe.ocr.RecipeTextRecognition;
 
 import java.io.File;
+import java.net.URISyntaxException;
 
 public class TessractExample {
-    
-    private void testEng(){
-        String pathToJpg = "C:\\prywatne\\expensesControl\\recipesRecognition\\src\\main\\resources\\ocr-test.jpg";
-        File imageFile = new File(pathToJpg);
-        ITesseract instance = new Tesseract();
-        String tessDataFolder = LoadLibs.extractTessResources("tessdata").getAbsolutePath();
-        instance.setDatapath(tessDataFolder);
-        try {
-            String string = instance.doOCR(imageFile);
-            System.out.println(string);
-        } catch (TesseractException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private void testPolish(){
-        String pathToJpg = "C:\\prywatne\\expensesControl\\recipesRecognition\\src\\main\\resources\\ocr-test-pl.jpg";
-        File imageFile = new File(pathToJpg);
-        ITesseract instance = new Tesseract();
-        String tessDataFolder = LoadLibs.extractTessResources("tessdata").getAbsolutePath();
-        instance.setLanguage("pol");
-        instance.setDatapath(imageFile.getParent());
-        try {
-            String string = instance.doOCR(imageFile);
-            System.out.println(string);
-        } catch (TesseractException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public static void main(String[] args) {
-        TessractExample tessractExample = new TessractExample();
-        tessractExample.testEng();
-        tessractExample.testPolish();
 
+    public static void main(String[] args) throws URISyntaxException {
+        RecipeTextRecognition recipeTextRecognition = new PolishRecipeTextRecognition();
+        final Recipe recipe = recipeTextRecognition.doOcr(new File(ClassLoader.getSystemResource("ocr-test-pl.jpg").toURI()));
+        System.out.println(recipe);
     }
 
 }
